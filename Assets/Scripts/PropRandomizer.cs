@@ -24,8 +24,10 @@ public class PropRandomizer : MonoBehaviour
         foreach (GameObject sp in propSpawnPoints)
         {
             int rand = Random.Range(0, propPrefabs.Count);
-            GameObject prop = Instantiate(propPrefabs[rand], sp.transform.position, Quaternion.identity);
-            prop.transform.parent= sp.transform;
+            Vector3 spawnPosition = new Vector3(sp.transform.position.x, sp.transform.position.y, -1); // Set Z to -1
+            GameObject prop = Instantiate(propPrefabs[rand], spawnPosition, Quaternion.identity);
+            prop.transform.parent = sp.transform;
         }
     }
+
 }

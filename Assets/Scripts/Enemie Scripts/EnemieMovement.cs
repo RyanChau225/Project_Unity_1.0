@@ -2,24 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemieMovement : MonoBehaviour
+public class EnemyMovement : MonoBehaviour
 {
     Transform player;
     public float movespeed;
     public float despawnDistance = 25f;
-   
+    private float speedMultiplier = 1f;
+    private KillCounter killCounter;
 
     // Start is called before the first frame update
     void Start()
     {
         player = FindAnyObjectByType<PlayerMovement>().transform;
+        killCounter = FindObjectOfType<KillCounter>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position = Vector2.MoveTowards(transform.position, player.transform.position, movespeed * Time.deltaTime);
-        if(Vector2.Distance(transform.position, player.position) >= despawnDistance)
+        transform.position = Vector2.MoveTowards(transform.position, player.transform.position, movespeed * speedMultiplier * Time.deltaTime);
+        if (Vector2.Distance(transform.position, player.position) >= despawnDistance)
         {
             ReturnEnemy();
         }
@@ -39,10 +41,18 @@ public class EnemieMovement : MonoBehaviour
         }
     }
 
+    public void SetSpeedMultiplier(float multiplier)
+    {
+        speedMultiplier = multiplier;
+        movespeed *= speedMultiplier; // Apply the multiplier to the move speed
+    }
+
     void Die()
     {
         // Handle the enemy's death here (like playing an animation)
         Debug.Log("Enemy has died!");
+
+        KillCounter.Instance.AddKill();
 
         Destroy(gameObject); // Destroy the enemy
     }
